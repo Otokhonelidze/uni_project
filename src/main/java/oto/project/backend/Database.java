@@ -2,9 +2,9 @@ package oto.project.backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Database {
 
@@ -68,19 +68,28 @@ public class Database {
 
     public void executeSql(String sqlCode) {
         try {
-            PreparedStatement prepStatement = this.con.prepareStatement(sqlCode);
+            Statement stmt = this.con.createStatement();
+            boolean isResultSet = stmt.execute(sqlCode);
+
+            if (isResultSet) {
+                try (ResultSet rs = stmt.getResultSet()) {
+                    int columnCount = rs.getMetaData().getColumnCount();
+                    System.out.println("Columns: " + columnCount);
+                    while (rs.next()) {
+                        System.out.println("Row: " + rs.getString(1));
+                    }
+                }
+            }
+            else {
+                int updateCount = stmt.getUpdateCount();
+                if (updateCount == -1) {
+                    System.out.println("no rows affected");
+                } else {
+                    System.out.println("Rows affected: " + updateCount);
+                }
+            }
         } catch (Exception e) {
-            
+            System.err.println("Error: " + e);
         }
     }
-
-    public void listAllTables(String sqlCode) {
-        try {
-            PreparedStatement prepStmt = this.con.prepareStatement(sqlCode);
-            ResultSet res = prepStmt.executeQuery();
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-    }
-
 }

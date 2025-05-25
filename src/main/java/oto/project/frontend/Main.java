@@ -13,7 +13,6 @@ public class Main extends Application {
         // String dbUrl = "jdbc:sqlserver://OTARI\\SQLEXPRESS;databaseName=myDB;trustServerCertificate=true;";
         // Database db = new Database(dbUrl, "sa", "");
         // db.startDatabase();
-        // db.executeSql("insert");
     }
 
     public static void main(String[] args) {

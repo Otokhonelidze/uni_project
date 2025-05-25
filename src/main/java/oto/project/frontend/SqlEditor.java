@@ -12,15 +12,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import oto.project.backend.Database;
+import oto.project.frontend.Dialog.Choice;
 
 public class SqlEditor {
 
-    private Stage stage;
-    private TextArea queryArea;
-    private TextArea resultArea;
-    private Button runBtn;
-    private Button clearBtn;
-    private Button saveBtn;
+    final Stage stage;
+    final TextArea queryArea;
+    final TextArea resultArea;
+    final Button runBtn;
+    final Button clearBtn;
+    final Button saveBtn;
+
+    private Database db;
 
     public SqlEditor(String title, int width, int height) {
         this.stage = new Stage();
@@ -45,9 +49,11 @@ public class SqlEditor {
         mainSection.getChildren().addAll(this.queryArea, this.resultArea);
         root.setCenter(mainSection);
 
-        Scene scene = new Scene(root, width, heigth, c);
+        Scene scene = new Scene(root, width, heigth);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         this.stage.setScene(scene);
+
+        // db.startDatabase();
     }
 
     private void setupStyles() {
@@ -57,10 +63,14 @@ public class SqlEditor {
 
     private void setupEvents() {
         this.runBtn.setOnAction(event -> {
-            
+            String sqlCode = queryArea.getText(); 
+            // db.executeSql(sqlCode);
         });
         this.clearBtn.setOnAction(event -> {
-            this.queryArea.clear();
+            Dialog dialog = new Dialog("Clear the code? ");
+            if (dialog.eventResult() == Choice.OK) {
+                this.queryArea.clear();
+            }
         });
         this.saveBtn.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
