@@ -2,6 +2,8 @@ package oto.project.backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class Database {
@@ -61,6 +63,23 @@ public class Database {
         } catch (SQLException e) {
             System.out.println("Can't close the database");
             e.printStackTrace();
+        }
+    }
+
+    public void executeSql(String sqlCode) {
+        try {
+            PreparedStatement prepStatement = this.con.prepareStatement(sqlCode);
+        } catch (Exception e) {
+            
+        }
+    }
+
+    public void listAllTables(String sqlCode) {
+        try {
+            PreparedStatement prepStmt = this.con.prepareStatement(sqlCode);
+            ResultSet res = prepStmt.executeQuery();
+        } catch (Exception e) {
+            // TODO: handle exception
         }
     }
 

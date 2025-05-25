@@ -3,16 +3,16 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <groupId>oto.project</groupId>
     <artifactId>uni_project</artifactId>
     <version>1.0-SNAPSHOT</version>
-
     <properties>
-        <maven.compiler.source>21</maven.compiler.source> <maven.compiler.target>21</maven.compiler.target> <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <javafx.version>21</javafx.version> <main.class>oto.project.Main</main.class>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>21</javafx.version>
+        <main.class>oto.project.frontend.Main</main.class>
     </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -23,7 +23,6 @@
                     <release>${maven.compiler.source}</release>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
@@ -35,27 +34,18 @@
                     <execution>
                         <id>default-cli</id>
                     </execution>
-                    <execution>
-                        <id>jlink</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>jlink</goal>
-                        </goals>
-                    </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <mainClass>oto.project.Main</mainClass>
+                    <mainClass>oto.project.frontend.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
     <dependencies>
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
@@ -73,5 +63,4 @@
             <version>${javafx.version}</version>
         </dependency>
     </dependencies>
-
 </project>
