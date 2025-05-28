@@ -8,15 +8,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Dialog {
+public final class Dialog implements Structure, Style {
 
-    private Stage stage;
-    private HBox hbox;
-    private VBox vbox;
-    private Button okBtn;
-    private Button cancelBtn;
-    private Label textLabel;
-    private String text;
+    private Scene scene;
+    final Stage stage;
+    final HBox hbox;
+    final VBox vbox;
+    final Button okBtn;
+    final Button cancelBtn;
+    final Label textLabel;
     private Choice userChoice = Choice.CANCEL;
 
     public enum Choice {
@@ -33,10 +33,11 @@ public class Dialog {
         this.textLabel = new Label(text);
 
         this.setupStructure();
-        this.setupStyle();
+        this.setupStyles();
     }
 
-    private void setupStructure() {
+    @Override
+    public void setupStructure() {
         VBox rootLayout = new VBox(50);
         rootLayout.setPrefWidth(400);
 
@@ -47,13 +48,17 @@ public class Dialog {
         this.hbox.setAlignment(Pos.CENTER);
 
         rootLayout.getChildren().addAll(this.vbox, this.hbox);
-        Scene scene = new Scene(rootLayout);
-        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        this.scene = new Scene(rootLayout);
         this.stage.setScene(scene);
     }
 
-    public void setupStyle() {
+    @Override
+    public void setupStyles() {
+        this.scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         this.okBtn.getStyleClass().add("button");
+    }
+
+    public void setupStyle() {
     }
 
     public Choice eventResult() {

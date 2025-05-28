@@ -3,6 +3,9 @@ package oto.project.frontend;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,56 +18,62 @@ import javafx.stage.Stage;
 import oto.project.backend.Database;
 import oto.project.frontend.Dialog.Choice;
 
-public class SqlEditor {
+public class SqlEditor implements Structure, Style, Event {
 
+    private Scene scene;
     final Stage stage;
     final TextArea queryArea;
     final TextArea resultArea;
     final Button runBtn;
     final Button clearBtn;
     final Button saveBtn;
+    final int width;
+    final int height;
+    final Database db;
 
-    private Database db;
-
-    public SqlEditor(String title, int width, int height) {
+    public SqlEditor(String title, int width, int height, Database db) {
         this.stage = new Stage();
         this.queryArea = new TextArea();
         this.resultArea = new TextArea();
         this.runBtn = new Button("Run");
         this.clearBtn = new Button("Clear");
         this.saveBtn = new Button("Save");
+        this.width = width;
+        this.height = height;
+        this.db = db;
 
-        this.setupStructure(width, height);
+        this.setupStructure();
         this.setupStyles();
         this.setupEvents();
     }
 
-    private void setupStructure(int width, int heigth) {
+    @Override
+    public final void setupStructure() {
         BorderPane root = new BorderPane();
         HBox statusBar = new HBox();
         statusBar.getChildren().addAll(this.runBtn, this.clearBtn, this.saveBtn);
-        root.setTop(statusBar); 
+        root.setTop(statusBar);
 
-        VBox mainSection = new VBox();
+        VBox mainSection = new VBox(50);
         mainSection.getChildren().addAll(this.queryArea, this.resultArea);
         root.setCenter(mainSection);
 
-        Scene scene = new Scene(root, width, heigth);
-        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        this.scene = new Scene(root, this.width, this.height);
         this.stage.setScene(scene);
-
-        // db.startDatabase();
     }
 
-    private void setupStyles() {
-        this.runBtn.getStyleClass().add("button");
+    @Override
+    public final void setupStyles() {
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        this.runBtn.getStyleClass().add(".runBtn");
         this.queryArea.getStyleClass().add("text-area");
     }
 
-    private void setupEvents() {
+    @Override
+    public final void setupEvents() {
         this.runBtn.setOnAction(event -> {
-            String sqlCode = queryArea.getText(); 
-            // db.executeSql(sqlCode);
+            String sqlCode = queryArea.getText();
+            runSQL(sqlCode);
         });
         this.clearBtn.setOnAction(event -> {
             Dialog dialog = new Dialog("Clear the code? ");
@@ -87,6 +96,40 @@ public class SqlEditor {
                 }
             }
         });
+    }
+
+    public void runSQL(String sqlCode) {
+        try {
+            Statement stmt = this.db.getCon().createStatement();
+            boolean isResultSet = stmt.execute(sqlCode);
+
+            if (isResultSet) {
+                try (ResultSet rs = stmt.getResultSet()) {
+                    int columnCount = rs.getMetaData().getColumnCount();
+
+                    StringBuilder sb = new StringBuilder();
+
+                    for (int i = 1; i <= columnCount; i++) {
+                        sb.append(rs.getMetaData().getColumnLabel(i)).append("\t");
+                    }
+                    sb.append("\n");
+
+                    while (rs.next()) {
+                        for (int i = 1; i <= columnCount; i++) {
+                            sb.append(rs.getString(i)).append("\t");
+                        }
+                        sb.append("\n");
+                    }
+
+                    this.resultArea.setText(sb.toString());
+                }
+            } else {
+                int updateCount = stmt.getUpdateCount();
+                this.resultArea.setText(updateCount + " rows affected.");
+            }
+        } catch (SQLException e) {
+            this.resultArea.setText("SQL Error: " + e.getMessage());
+        }
     }
 
     public String getQuery() {

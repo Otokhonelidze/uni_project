@@ -2,9 +2,7 @@ package oto.project.backend;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 public class Database {
 
@@ -17,6 +15,27 @@ public class Database {
         this.name = name;
         this.user = user;
         this.password = password;
+    }
+
+    public void startConnection() {
+        try {
+            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
+            this.con = DriverManager.getConnection(this.name, this.user, this.password);
+            if (con != null) {
+                System.out.println("Connected");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while connecting to the database: " + e);
+        } 
+    }
+
+   public void closeConnection() {
+        try {
+            this.con.close();
+            System.out.println("Connection closed");
+        } catch (SQLException e) {
+            System.out.println("Can't close the database");
+        }
     }
 
     public String getName() {
@@ -43,53 +62,7 @@ public class Database {
         this.password = password;
     }
 
-    public void startDatabase() {
-        try {
-            DriverManager.registerDriver(new com.microsoft.sqlserver.jdbc.SQLServerDriver());
-            this.con = DriverManager.getConnection(this.name, this.user, this.password);
-            if (con != null) {
-                System.out.println("Connected");
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while connecting to the database");
-            e.printStackTrace();
-        } 
-    }
-
-   public void endDatabase() {
-        try {
-            this.con.close();
-            System.out.println("Connection closed");
-        } catch (SQLException e) {
-            System.out.println("Can't close the database");
-            e.printStackTrace();
-        }
-    }
-
-    public void executeSql(String sqlCode) {
-        try {
-            Statement stmt = this.con.createStatement();
-            boolean isResultSet = stmt.execute(sqlCode);
-
-            if (isResultSet) {
-                try (ResultSet rs = stmt.getResultSet()) {
-                    int columnCount = rs.getMetaData().getColumnCount();
-                    System.out.println("Columns: " + columnCount);
-                    while (rs.next()) {
-                        System.out.println("Row: " + rs.getString(1));
-                    }
-                }
-            }
-            else {
-                int updateCount = stmt.getUpdateCount();
-                if (updateCount == -1) {
-                    System.out.println("no rows affected");
-                } else {
-                    System.out.println("Rows affected: " + updateCount);
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error: " + e);
-        }
+    public Connection getCon() {
+        return con;
     }
 }
