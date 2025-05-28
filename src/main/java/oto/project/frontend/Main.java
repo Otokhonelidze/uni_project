@@ -8,8 +8,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        String dbUrl = "jdbc:sqlserver://OTARI\\SQLEXPRESS;databaseName=myDB;trustServerCertificate=true;";
-        Database db = new Database(dbUrl, "sa", "");
+        Database db = new Database("OTARI\\SQLEXPRESS", "myDB", "sa", "database890");
         db.startConnection();
 
         SqlEditor sqlEditor = new SqlEditor("Editor", 1080, 720, db);

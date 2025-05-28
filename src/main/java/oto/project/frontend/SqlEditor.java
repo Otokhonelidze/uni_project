@@ -35,6 +35,7 @@ public class SqlEditor implements Structure, Style, Event {
         this.stage = new Stage();
         this.queryArea = new TextArea();
         this.resultArea = new TextArea();
+        this.resultArea.setEditable(false);
         this.runBtn = new Button("Run");
         this.clearBtn = new Button("Clear");
         this.saveBtn = new Button("Save");
@@ -66,7 +67,8 @@ public class SqlEditor implements Structure, Style, Event {
     public final void setupStyles() {
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         this.runBtn.getStyleClass().add(".runBtn");
-        this.queryArea.getStyleClass().add("text-area");
+        this.queryArea.getStyleClass().add("quaryArea");
+        this.resultArea.getStyleClass().add("resultArea");
     }
 
     @Override
