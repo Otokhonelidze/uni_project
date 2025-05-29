@@ -20,7 +20,7 @@
     -fx-text-fill: #202124;
 }
 
-.quaryArea {
+.queryArea {
     -fx-font-size: 20px;
     -fx-font-family: "Arial", sans-serif;
     -fx-background-color: transparent;
@@ -29,7 +29,7 @@
     -fx-background-insets: 0;
 }
 
-.quaryArea:focused {
+.queryArea:focused {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-background-color: -fx-control-inner-background;
@@ -40,7 +40,7 @@
     -fx-focus-ring-color: transparent;
 }
 
-.quaryArea .content {
+.queryArea .content {
     -fx-background-color: -fx-control-inner-background;
     -fx-background-insets: 0;
     -fx-padding: 20px;
@@ -48,7 +48,7 @@
     -fx-border-width: 0;
 }
 
-.quaryArea .scroll-pane {
+.queryArea .scroll-pane {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-padding: 0;
@@ -56,7 +56,7 @@
     -fx-border-width: 0;
 }
 
-.quaryArea .scroll-pane .viewport {
+.queryArea .scroll-pane .viewport {
     -fx-background-color: transparent;
     -fx-background-insets: 0;
     -fx-padding: 0;
@@ -64,7 +64,7 @@
     -fx-border-width: 0;
 }
 
-.quaryArea .scroll-bar:focused {
+.queryArea .scroll-bar:focused {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-border-color: transparent;

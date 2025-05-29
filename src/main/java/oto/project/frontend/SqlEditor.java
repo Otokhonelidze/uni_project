@@ -3,6 +3,7 @@ package oto.project.frontend;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,8 +11,10 @@ import java.sql.Statement;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -33,6 +36,7 @@ public class SqlEditor implements Structure, Style, Event {
 
     public SqlEditor(String title, int width, int height, Database db) {
         this.stage = new Stage();
+        this.stage.setTitle(title);
         this.queryArea = new TextArea();
         this.resultArea = new TextArea();
         this.resultArea.setEditable(false);
@@ -55,8 +59,9 @@ public class SqlEditor implements Structure, Style, Event {
         statusBar.getChildren().addAll(this.runBtn, this.clearBtn, this.saveBtn);
         root.setTop(statusBar);
 
-        VBox mainSection = new VBox(50);
+        VBox mainSection = new VBox(10);
         mainSection.getChildren().addAll(this.queryArea, this.resultArea);
+        VBox.setVgrow(this.queryArea, Priority.ALWAYS);
         root.setCenter(mainSection);
 
         this.scene = new Scene(root, this.width, this.height);
@@ -66,9 +71,13 @@ public class SqlEditor implements Structure, Style, Event {
     @Override
     public final void setupStyles() {
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        this.runBtn.getStyleClass().add(".runBtn");
-        this.queryArea.getStyleClass().add("quaryArea");
+        this.runBtn.getStyleClass().add("runBtn");
+        this.queryArea.getStyleClass().add("queryArea");
         this.resultArea.getStyleClass().add("resultArea");
+
+        InputStream iconStream = getClass().getResourceAsStream("/icons/database_32px.png");
+        Image icon = new Image(iconStream);
+        this.stage.getIcons().add(icon);
     }
 
     @Override
